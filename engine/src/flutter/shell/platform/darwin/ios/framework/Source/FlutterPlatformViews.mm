@@ -755,6 +755,14 @@ static BOOL _preparedOnce = NO;
     self.state = UIGestureRecognizerStateFailed;
     _flutterViewController = nil;
     [self forceResetStateIfNeeded];
+  } else {
+    // Still have active touches. Tell the recognizer to ignore the ones that just ended
+    // so it doesn’t interfere with the rest of the gesture sequence.
+    [touches enumerateObjectsUsingBlock:^(UITouch* obj, BOOL* _Nonnull stop) {
+      if (obj.view != nil) {
+        [self ignoreTouch:obj forEvent:event];
+      }
+    }];
   }
 }
 
